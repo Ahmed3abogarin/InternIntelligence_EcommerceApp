@@ -7,8 +7,8 @@
     <ImageView
         android:id="@+id/cateImg"
         android:layout_marginTop="8dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="75dp"
+        android:layout_height="75dp" />
     <TextView
         android:id="@+id/cateName"
         android:layout_width="match_parent"
@@ -16,6 +16,6 @@
         android:layout_marginTop="8dp"
         android:text="title"
         android:gravity="center"
-        android:textSize="20sp"/>
+        android:textSize="17sp"/>
 
 </LinearLayout>

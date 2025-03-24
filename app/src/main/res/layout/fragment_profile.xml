@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F4F4F4"
     android:fillViewport="true"
-    tools:context=".fragment.shopping.ProfileFragment"
-    android:background="#F4F4F4">
-
+    tools:context=".fragment.shopping.ProfileFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,12 +17,12 @@
             android:id="@+id/progressbarSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:indeterminateTint="@color/my_gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:indeterminateTint="@color/my_gray"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintParent"
@@ -36,22 +35,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Settings"
+                android:textSize="32sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintProfile"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@+id/tvSettings">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageUser"
-                    android:layout_width="43dp"
-                    android:layout_height="43dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:src="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -61,44 +62,35 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:text="Name"
+                    android:textSize="22sp"
                     app:layout_constraintStart_toEndOf="@id/imageUser"
                     app:layout_constraintTop_toTopOf="@+id/imageUser" />
-
-
 
                 <TextView
                     android:id="@+id/tv_edit_personal_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="edit personal details"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvUserName"
                     app:layout_constraintTop_toBottomOf="@id/tvUserName"
-                    app:layout_constraintStart_toStartOf="@+id/tvUserName" />
-
-                <ImageView
-                    android:id="@+id/arrow"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/ic_close"
-                    app:layout_constraintEnd_toEndOf="@id/constraintProfile"
-                    app:layout_constraintTop_toTopOf="@id/tvUserName"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_edit_personal_details"
-                    app:tint="@color/my_blue" />
-
+                    app:layout_constraintVertical_bias="0.466" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tvOrders"
-                android:textColor="@color/my_gray"
-                android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Orders"
+                android:textSize="24sp"
+                android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/constraintProfile" />
 
@@ -107,245 +99,215 @@
                 android:id="@+id/linearOrders"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvOrders"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:background="#E6E6E6">
+                android:layout_marginTop="12dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintTop_toBottomOf="@id/tvOrders">
 
                 <LinearLayout
                     android:id="@+id/linearAllOrders"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/profile_back"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_history"
-                        android:padding="4dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        app:tint="@color/white" />
+                        android:padding="4dp"
+                        android:src="@drawable/ic_history"
+                        app:tint="@color/custom_gray" />
 
                     <TextView
                         android:id="@+id/tvAllOrders"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:text="All orders"
-                        android:textColor="@color/my_gray"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
+                        android:textSize="22sp" />
 
                     <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_close"
-                        app:tint="@color/my_blue"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_more" />
                 </LinearLayout>
 
 
                 <LinearLayout
+                    android:id="@+id/linearTrackOrder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/linearTrackOrder">
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/profile_back"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/search_icon"
-                        android:padding="5dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        android:backgroundTint="@color/my_gray"
-                        app:tint="@color/white" />
+                        android:padding="4dp"
+                        android:src="@drawable/search_icon"
+                        app:tint="@color/custom_gray" />
 
                     <TextView
                         android:id="@+id/tvTrackOrders"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:text="Track Orders"
-                        android:textColor="@color/my_gray"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
+                        android:textColor="@color/custom_gray"
+                        android:textSize="22sp" />
 
                     <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_close"
-                        app:tint="@color/my_blue"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_more" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearBilling"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_height="50dp"
+                    android:background="@drawable/profile_back"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_wallet"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:layout_gravity="center_vertical"
                         android:padding="4dp"
-                        android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#FF9800"
-                        app:tint="@color/white" />
+                        android:src="@drawable/ic_wallet"
+                        app:tint="@color/custom_gray" />
 
                     <TextView
                         android:id="@+id/tvBilling"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:text="Billing"
-                        android:textColor="@color/my_gray"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
+                        android:textColor="@color/custom_gray"
+                        android:textSize="22sp" />
 
                     <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_close"
-                        app:tint="@color/my_blue"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_more" />
                 </LinearLayout>
             </LinearLayout>
-
 
 
             <TextView
                 android:id="@+id/tvNotifications"
-                android:textColor="@color/my_gray"
-                android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Notifications"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/linearOrders" />
+
 
             <LinearLayout
                 android:id="@+id/linearNotifications"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/profile_back"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvNotifications"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:background="#E6E6E6">
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintTop_toBottomOf="@id/tvNotifications">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_notification"
+                    app:tint="@color/custom_gray" />
+
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:text="Notifications"
+                    android:textColor="@color/custom_gray"
+                    android:textSize="22sp" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_notification"
-                        android:padding="4dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        app:tint="@color/white"
-                        android:backgroundTint="#4cd964"/>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:buttonTint="#4cd964"
+                    android:checked="false" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Notifications"
-                        android:textColor="@color/my_gray"
-                        android:textStyle="bold"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center_vertical"/>
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchNotification"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:buttonTint="#4cd964"
-                        android:checked="true"
-                        />
-
-                </LinearLayout>
             </LinearLayout>
-
 
 
             <TextView
                 android:id="@+id/tvRegional"
-                android:textColor="@color/my_gray"
-                android:textStyle="normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Regional"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/linearNotifications" />
 
+
             <LinearLayout
-                android:background="#E6E6E6"
-                android:id="@+id/linear_regional"
+                android:id="@+id/linearLogOut"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/profile_back"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/tvRegional"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintTop_toBottomOf="@id/tvRegional">
 
-                <LinearLayout
-                    android:id="@+id/linearLogOut"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@color/custom_gray" />
+
+                <TextView
+                    android:id="@+id/logout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:text="Logout"
+                    android:textSize="22sp"
+                    android:textColor="@color/custom_gray"
+                    android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_logout"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/settings_items_background"
-                        android:backgroundTint="#ff5823"
-                        app:tint="@color/white"
-                        />
-
-                    <TextView
-                        android:id="@+id/logout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:text="Logout"
-                        android:textColor="@color/my_gray"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_close"
-                        app:tint="@color/my_blue"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-
-
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_more" />
             </LinearLayout>
 
 
@@ -361,8 +323,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@+id/linear_regional" />
-
+                app:layout_constraintTop_toBottomOf="@+id/linearLogOut" />
 
 
             <androidx.constraintlayout.widget.Guideline

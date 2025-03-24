@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.ecommerceapp.databinding.ViewpagerItemBinding
 
@@ -17,7 +17,7 @@ class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>(
     inner class PagerViewHolder(val binding: ViewpagerItemBinding) : ViewHolder(binding.root) {
         fun bind(image: String) {
             var requestOptions = RequestOptions()
-            requestOptions = requestOptions.transform(FitCenter())
+            requestOptions = requestOptions.transform(CenterCrop())
             Glide.with(itemView).load(image).apply(requestOptions).into(binding.imageProductDetails)
         }
 

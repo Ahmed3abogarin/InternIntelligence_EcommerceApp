@@ -20,6 +20,7 @@ import com.example.ecommerceapp.adapter.ViewPagerAdapter
 import com.example.ecommerceapp.data.CartProduct
 import com.example.ecommerceapp.data.Product
 import com.example.ecommerceapp.databinding.FragmentProductDetailsBinding
+import com.example.ecommerceapp.util.HorizontalItemDecoration
 import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.util.hideBottomNavigationBar
 import com.example.ecommerceapp.viewmodel.DetailsViewModel
@@ -120,7 +121,7 @@ class ProductDetailsFragment : Fragment() {
 
 
                         binding.addToCartBtn.doneLoadingAnimation(R.color.my_green,ss!!)
-                        delay(700)
+                        delay(1000)
                         binding.addToCartBtn.revertAnimation()
                         binding.addToCartBtn.setBackgroundColor(resources.getColor(R.color.grey))
                     }
@@ -141,7 +142,6 @@ class ProductDetailsFragment : Fragment() {
 
     private fun setUpViewPager() {
         binding.apply {
-
             detailsViewPager.adapter = viewPagerAdapter
         }
     }
@@ -150,15 +150,9 @@ class ProductDetailsFragment : Fragment() {
         binding.apply {
 //            var requestOptions = RequestOptions()
 //            requestOptions = requestOptions.transform(CenterCrop())
-
-
             productName.text = product.name
-            productPrice.text = product.price.toString()
-
-            // **************************************************************
-            // TODO : Don't  forget to add the inner tab for each product
-
-            //productDescription.text = product.description
+//            productDescription.text = product.description
+            productPrice.text = "$"+product.price.toString()
 
             if (product.colors.isNullOrEmpty()) {
                 binding.colorsTV.visibility = View.INVISIBLE
@@ -166,8 +160,6 @@ class ProductDetailsFragment : Fragment() {
             if (product.sizes.isNullOrEmpty()) {
                 binding.sizesTV.visibility = View.INVISIBLE
             }
-
-
         }
     }
 
@@ -176,6 +168,7 @@ class ProductDetailsFragment : Fragment() {
             sizesRecycler.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             sizesRecycler.adapter = sizesAdapter
+            sizesRecycler.addItemDecoration(HorizontalItemDecoration())
         }
 
     }
@@ -185,6 +178,7 @@ class ProductDetailsFragment : Fragment() {
             colorsRecycler.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             colorsRecycler.adapter = colorsAdapter
+            colorsRecycler.addItemDecoration(HorizontalItemDecoration())
         }
 
     }
