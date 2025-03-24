@@ -32,6 +32,9 @@ class ProductsViewModel @Inject constructor(
     private val _catImages = MutableStateFlow<Resource<List<Cats>>>(Resource.Unspecified())
     val catImages = _catImages.asStateFlow()
 
+    private val _searchedProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
+    val searchedProducts = _searchedProducts.asStateFlow()
+
 
 
     init {
@@ -113,6 +116,32 @@ class ProductsViewModel @Inject constructor(
                 }
 
             }
+    }
+
+
+    fun fetchSearchProducts(searchQuery: String){
+        viewModelScope.launch { _searchedProducts.emit(Resource.Loading()) }
+
+        firestore.collection("products").get()
+            .addOnSuccessListener { documents ->
+                val allProducts = documents.toObjects(Product::class.java)
+
+                // Filter products by lowercase search query
+                val filteredProducts = allProducts.filter { product ->
+                    product.name.lowercase().contains(searchQuery.lowercase()) // Case-insensitive search
+                }
+
+                viewModelScope.launch {
+                    _searchedProducts.emit(Resource.Success(filteredProducts))
+                }
+            }
+            .addOnFailureListener {
+                viewModelScope.launch {
+                    _searchedProducts.emit(Resource.Error(it.message.toString()))
+                }
+            }
+
+
     }
 
 

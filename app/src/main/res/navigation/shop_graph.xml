@@ -13,14 +13,18 @@
         <action
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/from_bottom" />
     </fragment>
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.ecommerceapp.fragment.shopping.SearchFragment"
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.ecommerceapp.fragment.shopping.FavoriteFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search">
+        tools:layout="@layout/fragment_favorite">
         <action
-            android:id="@+id/action_searchFragment_to_productDetailsFragment"
+            android:id="@+id/action_searchFragment_to_productFavoriteFragment"
             app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
@@ -110,5 +114,17 @@
         <argument
             android:name="order"
             app:argType="com.example.ecommerceapp.data.order.Order" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.ecommerceapp.fragment.shopping.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
 </navigation>

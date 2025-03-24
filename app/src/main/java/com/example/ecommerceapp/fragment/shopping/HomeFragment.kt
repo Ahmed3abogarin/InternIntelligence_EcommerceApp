@@ -29,6 +29,7 @@ class HomeFragment: Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var adapter = ProductAdapter()
     private var adapter2 = ProductAdapter()
+    private var adapter3 = ProductAdapter()
     private val viewModel by viewModels<ProductsViewModel>()
     private val pagerAdapter by lazy { BannersViewPagerAdapter() }
     private val catAdapter by lazy { CatsAdapter() }
@@ -48,7 +49,29 @@ class HomeFragment: Fragment() {
             val b = Bundle().apply { putParcelable("product",it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,b)
         }
+        adapter3.onClick = {
+            val b = Bundle().apply { putParcelable("product",it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,b)
+        }
 
+
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.searchedProducts.collectLatest {
+                when (it) {
+                    is Resource.Loading ->{
+
+                    }
+                    is Resource.Success -> {
+                        adapter3.differ.submitList(it.data)
+                    }
+                    is Resource.Error -> {
+
+                    }
+                    else -> Unit
+                }
+            }
+        }
 
 
         lifecycleScope.launchWhenStarted {
@@ -163,8 +186,12 @@ class HomeFragment: Fragment() {
         setUpNewRV()
         setUpViewPager()
 
-
+        binding.mySearchView.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
     }
+
+
 
     private fun setUpCatRV() {
         binding.officalRecycler.apply {

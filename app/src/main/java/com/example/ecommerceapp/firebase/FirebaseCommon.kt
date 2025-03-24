@@ -3,8 +3,6 @@ package com.example.ecommerceapp.firebase
 import com.example.ecommerceapp.data.CartProduct
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Transaction
-import com.google.firebase.firestore.toObject
 
 
 class FirebaseCommon (
@@ -31,7 +29,7 @@ class FirebaseCommon (
 
     // the product exits so we have just to increase the quantity
     fun increaseQuantity(documentId: String, onResult: (String?, Exception?)-> Unit){
-        var cartCollection = getCartCollection()
+        val cartCollection = getCartCollection()
         firestore.runTransaction { transition ->
             val documentRef = cartCollection.document(documentId)
             val document = transition.get(documentRef)
@@ -50,7 +48,7 @@ class FirebaseCommon (
     }
 
     fun decreaseQuantity(documentId: String, onResult: (String?, Exception?)-> Unit){
-        var cartCollection = getCartCollection()
+        val cartCollection = getCartCollection()
         firestore.runTransaction { transition ->
             val documentRef = cartCollection.document(documentId)
             val document = transition.get(documentRef)
