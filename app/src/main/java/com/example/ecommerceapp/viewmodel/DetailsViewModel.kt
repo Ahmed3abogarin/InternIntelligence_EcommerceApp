@@ -3,6 +3,7 @@ package com.example.ecommerceapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerceapp.data.CartProduct
+import com.example.ecommerceapp.data.Product
 import com.example.ecommerceapp.firebase.FirebaseCommon
 import com.example.ecommerceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,9 @@ class DetailsViewModel @Inject constructor(
     // state
     private val _addToCart = MutableStateFlow<Resource<CartProduct>>(Resource.Unspecified())
     val addToCart = _addToCart.asStateFlow()
+
+    private val _addToFavorite = MutableStateFlow<Resource<Product>>(Resource.Unspecified())
+    val addToFavorite = _addToFavorite.asStateFlow()
 
     // We have two scenarios: 1) the item doesn't exists in cart 2) item exists so we have just to increase the quantity
     fun addOrUpdateProductToCart(cartProduct: CartProduct){
@@ -58,6 +62,19 @@ class DetailsViewModel @Inject constructor(
                 viewModelScope.launch { _addToCart.emit(Resource.Error(it.message.toString())) }
 
             }
+    }
+
+    fun addProductToFavorite(product: Product){
+        firebaseCommon.addProductToFavorite(product){ addedProduct, e ->
+            viewModelScope.launch {
+                if (e == null){
+                    _addToFavorite.emit(Resource.Success(addedProduct!!))
+                }else{
+                    _addToFavorite.emit(Resource.Error(e.message.toString()))
+                }
+            }
+
+        }
     }
 
     private fun addNewProduct(cartProduct: CartProduct){

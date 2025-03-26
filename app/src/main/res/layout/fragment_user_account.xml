@@ -27,8 +27,8 @@
 
                 <ImageView
                     android:id="@+id/imageCloseUserAccount"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_close"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -40,7 +40,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
+                    android:layout_marginStart="40dp"
                     android:fontFamily="sans-serif-black"
                     android:text="My account"
                     android:textColor="@color/black"
@@ -52,16 +52,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <ProgressBar
-            android:id="@+id/progressbarAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"
-            />
+
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageUser"
@@ -145,12 +136,11 @@
             android:id="@+id/buttonSave"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:background="@color/my_blue"
+            android:background="@drawable/green_btn"
             android:fontFamily="sans-serif-black"
             android:text="Save"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
@@ -171,6 +161,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.96" />
+        <ProgressBar
+            android:id="@+id/progressbarAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

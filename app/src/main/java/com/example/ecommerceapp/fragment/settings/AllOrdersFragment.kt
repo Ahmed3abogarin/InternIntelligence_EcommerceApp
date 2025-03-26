@@ -24,9 +24,6 @@ class AllOrdersFragment : Fragment() {
     private val viewModel by viewModels<AllOrdersViewModel>()
     private val allOrdersAdapter by lazy { AllOrdersAdapter() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +67,9 @@ class AllOrdersFragment : Fragment() {
         allOrdersAdapter.onClick = {
             val action = AllOrdersFragmentDirections.actionAllOrdersFragmentToOrderDetailsFragment(it)
             findNavController().navigate(action)
+        }
+        binding.imageCloseOrders.setOnClickListener {
+            findNavController().navigateUp()
         }
 
 

@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class HomeFragment: Fragment() {
+class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var adapter = ProductAdapter()
     private var adapter2 = ProductAdapter()
@@ -34,24 +34,24 @@ class HomeFragment: Fragment() {
     private val pagerAdapter by lazy { BannersViewPagerAdapter() }
     private val catAdapter by lazy { CatsAdapter() }
 
-    // TODO : TO Forget to add the method for download product as long as scroll not all at once
+    // don't Forget to add the method for download product as long as scroll not all at once
     //  to prevent memory leak and waste the download data from the database
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         adapter.onClick = {
-            val b = Bundle().apply { putParcelable("product",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,b)
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
         }
 
         adapter2.onClick = {
-            val b = Bundle().apply { putParcelable("product",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,b)
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
         }
         adapter3.onClick = {
-            val b = Bundle().apply { putParcelable("product",it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,b)
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
         }
 
 
@@ -59,44 +59,47 @@ class HomeFragment: Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.searchedProducts.collectLatest {
                 when (it) {
-                    is Resource.Loading ->{
+                    is Resource.Loading -> {
 
                     }
+
                     is Resource.Success -> {
                         adapter3.differ.submitList(it.data)
                     }
-                    is Resource.Error -> {
-
-                    }
-                    else -> Unit
-                }
-            }
-        }
-
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.bannerImages.collectLatest {
-                when (it) {
-                    is Resource.Loading -> {
-                        //binding.officialProgress.visibility = View.VISIBLE
-                    }
-
-                    is Resource.Success -> {
-
-                        pagerAdapter.differ.submitList(it.data)
-
-                        //binding.officialProgress.visibility = View.GONE
-                    }
 
                     is Resource.Error -> {
-                        Log.e("TAG", it.message.toString())
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+
                     }
 
                     else -> Unit
                 }
+
             }
 
+
+            lifecycleScope.launchWhenStarted {
+                viewModel.bannerImages.collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            //binding.officialProgress.visibility = View.VISIBLE
+                        }
+
+                        is Resource.Success -> {
+
+                            pagerAdapter.differ.submitList(it.data)
+
+                            //binding.officialProgress.visibility = View.GONE
+                        }
+
+                        is Resource.Error -> {
+                            Log.e("TAG", it.message.toString())
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
         }
 
 
@@ -122,6 +125,7 @@ class HomeFragment: Fragment() {
                     else -> Unit
                 }
             }
+
         }
 
         lifecycleScope.launchWhenStarted {
@@ -145,6 +149,7 @@ class HomeFragment: Fragment() {
                     else -> Unit
                 }
             }
+
 
         }
 
@@ -172,10 +177,6 @@ class HomeFragment: Fragment() {
         }
 
 
-
-
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -186,17 +187,16 @@ class HomeFragment: Fragment() {
         setUpNewRV()
         setUpViewPager()
 
-        binding.mySearchView.setOnClickListener{
+        binding.mySearchView.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
     }
 
 
-
     private fun setUpCatRV() {
         binding.officalRecycler.apply {
             layoutManager =
-                LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
             adapter = catAdapter
             addItemDecoration(VerticalItemDecoration())
@@ -226,29 +226,27 @@ class HomeFragment: Fragment() {
             popularRecycler.addItemDecoration(VerticalItemDecoration())
         }
     }
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View {
-            binding = FragmentHomeBinding.inflate(inflater)
-            return binding.root
-        }
-
-
-
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater)
+        return binding.root
+    }
 
 
     private fun showLoading() {
         binding.popularProgress.visibility = View.VISIBLE
     }
-    private fun hideLoading(){
+
+    private fun hideLoading() {
         binding.popularProgress.visibility = View.GONE
     }
 
     override fun onResume() {
         super.onResume()
-
         showBottomNavigationBar()
     }
 }

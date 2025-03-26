@@ -23,10 +23,12 @@ import com.example.ecommerceapp.databinding.FragmentProductDetailsBinding
 import com.example.ecommerceapp.util.HorizontalItemDecoration
 import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.util.hideBottomNavigationBar
+import com.example.ecommerceapp.util.showBottomNavigationBar
 import com.example.ecommerceapp.viewmodel.DetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductDetailsFragment : Fragment() {
@@ -40,11 +42,16 @@ class ProductDetailsFragment : Fragment() {
     private lateinit var product: Product
     private val viewPagerAdapter by lazy { ViewPagerAdapter() }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        showBottomNavigationBar()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         hideBottomNavigationBar()
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false)
@@ -90,11 +97,11 @@ class ProductDetailsFragment : Fragment() {
         // -------------------- Add To Cart Process -----------------
         binding.addToCartBtn.setOnClickListener {
 
-            if (!product.colors.isNullOrEmpty() && selectedColors == null){
-                Toast.makeText(requireContext(),"Choose a color",Toast.LENGTH_SHORT).show()
-            }else if (!product.sizes.isNullOrEmpty() && selectedSizes == null){
-                Toast.makeText(requireContext(),"Choose a Size",Toast.LENGTH_SHORT).show()
-            }else {
+            if (!product.colors.isNullOrEmpty() && selectedColors == null) {
+                Toast.makeText(requireContext(), "Choose a color", Toast.LENGTH_SHORT).show()
+            } else if (!product.sizes.isNullOrEmpty() && selectedSizes == null) {
+                Toast.makeText(requireContext(), "Choose a Size", Toast.LENGTH_SHORT).show()
+            } else {
                 viewModel.addOrUpdateProductToCart(
                     CartProduct(
                         product,
@@ -104,7 +111,11 @@ class ProductDetailsFragment : Fragment() {
                     )
                 )
             }
+        }
 
+        // add to favorite
+        binding.favoriteBtn.setOnClickListener {
+            viewModel.addProductToFavorite(product)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -116,11 +127,12 @@ class ProductDetailsFragment : Fragment() {
                     }
 
                     is Resource.Success -> {
-                        val cartImg = ContextCompat.getDrawable(requireContext(),R.drawable.ic_done)
+                        val cartImg =
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_done)
                         val ss = cartImg?.toBitmap()
 
 
-                        binding.addToCartBtn.doneLoadingAnimation(R.color.my_green,ss!!)
+                        binding.addToCartBtn.doneLoadingAnimation(R.color.my_green, ss!!)
                         delay(1000)
                         binding.addToCartBtn.revertAnimation()
                         binding.addToCartBtn.setBackgroundColor(resources.getColor(R.color.grey))
@@ -134,7 +146,24 @@ class ProductDetailsFragment : Fragment() {
                     else -> Unit
                 }
             }
+        }
 
+        lifecycleScope.launch {
+            viewModel.addToFavorite.collectLatest {
+                when (it) {
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    is Resource.Success -> {
+                        Toast.makeText(requireContext(), "Added to favorites", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    else -> Unit
+                }
+            }
         }
 
 
@@ -152,7 +181,7 @@ class ProductDetailsFragment : Fragment() {
 //            requestOptions = requestOptions.transform(CenterCrop())
             productName.text = product.name
 //            productDescription.text = product.description
-            productPrice.text = "$"+product.price.toString()
+            productPrice.text = "$" + product.price.toString()
 
             if (product.colors.isNullOrEmpty()) {
                 binding.colorsTV.visibility = View.INVISIBLE

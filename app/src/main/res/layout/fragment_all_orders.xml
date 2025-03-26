@@ -19,8 +19,8 @@
 
             <ImageView
                 android:id="@+id/imageCloseOrders"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_close"
                 app:layout_constraintBottom_toBottomOf="parent"

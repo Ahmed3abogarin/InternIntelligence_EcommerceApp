@@ -2,7 +2,6 @@ package com.example.ecommerceapp.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.AndroidViewModel
@@ -14,7 +13,6 @@ import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.util.validateEmail
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
 import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +42,7 @@ class UserAccountViewModel @Inject constructor(
         getUser()
     }
 
-    fun getUser(){
+    private fun getUser(){
         viewModelScope.launch { _user.emit(Resource.Loading()) }
 
         firestore.collection("Shop_users").document(auth.uid!!).get()

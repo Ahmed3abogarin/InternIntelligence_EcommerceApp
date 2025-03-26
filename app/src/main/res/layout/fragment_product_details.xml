@@ -39,7 +39,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView7"
+                        android:id="@+id/favoriteBtn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"

@@ -1,10 +1,12 @@
 package com.example.ecommerceapp.fragment.settings
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ecommerceapp.adapter.BillingProductAdapter
@@ -14,22 +16,20 @@ import com.example.ecommerceapp.databinding.FragmentOrderDetailsBinding
 import com.example.ecommerceapp.util.VerticalItemDecoration
 
 
-class OrderDetailsFragment: Fragment() {
-    private lateinit var binding:FragmentOrderDetailsBinding
+class OrderDetailsFragment : Fragment() {
+    private lateinit var binding: FragmentOrderDetailsBinding
     private val orderDetailsAdapter by lazy { BillingProductAdapter() }
     private val args by navArgs<OrderDetailsFragmentArgs>()
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentOrderDetailsBinding.inflate(inflater,container,false)
+        binding = FragmentOrderDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -53,7 +53,9 @@ class OrderDetailsFragment: Fragment() {
                 )
             )
 
-            val currentOrderState = when(getOrderStatus(order.orderStatus)){
+            Log.v("TAGY",order.orderStatus)
+
+            val currentOrderState = when (getOrderStatus(order.orderStatus)) {
                 is OrderStatus.Ordered -> 0
                 is OrderStatus.Confirmed -> 1
                 is OrderStatus.Shipped -> 2
@@ -61,8 +63,8 @@ class OrderDetailsFragment: Fragment() {
                 else -> 0
             }
 
-            stepView.go(currentOrderState,false)
-            if (currentOrderState == 3){
+            stepView.go(currentOrderState, false)
+            if (currentOrderState == 3) {
                 stepView.done(true)
             }
 
@@ -75,6 +77,9 @@ class OrderDetailsFragment: Fragment() {
 
         orderDetailsAdapter.differ.submitList(order.products)
 
+        binding.imageCloseOrder.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
 
     }
@@ -82,7 +87,7 @@ class OrderDetailsFragment: Fragment() {
     private fun setUpOrdersRV() {
         binding.rvProducts.apply {
             layoutManager =
-                LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = orderDetailsAdapter
             addItemDecoration(VerticalItemDecoration())
         }

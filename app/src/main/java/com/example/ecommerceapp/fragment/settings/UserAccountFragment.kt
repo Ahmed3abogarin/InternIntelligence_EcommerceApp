@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -23,6 +22,7 @@ import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.viewmodel.UserAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import androidx.core.graphics.drawable.toDrawable
 
 @AndroidEntryPoint
 class UserAccountFragment : Fragment() {
@@ -48,7 +48,7 @@ class UserAccountFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentUserAccountBinding.inflate(inflater, container, false)
         return binding.root
@@ -122,12 +122,15 @@ class UserAccountFragment : Fragment() {
             intent.type = "image/*"
             imageActivityResultLauncher.launch(intent)
         }
+        binding.imageCloseUserAccount.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun showUserInformation(data: User) {
         binding.apply {
             Glide.with(this@UserAccountFragment).load(data.imagePath)
-                .error(ColorDrawable(Color.BLACK)).into(imageUser)
+                .error(Color.BLACK.toDrawable()).into(imageUser)
             edFirstName.setText(data.firstName)
             edLastName.setText(data.lastName)
             edEmail.setText(data.email)

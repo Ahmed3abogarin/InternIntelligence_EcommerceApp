@@ -22,15 +22,14 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         app:menu="@menu/bottom_navigation"
-        app:labelVisibilityMode="unlabeled"
         app:itemIconTint="@color/black"
+        app:labelVisibilityMode="labeled"
+        app:itemActiveIndicatorStyle="@null"
         app:itemRippleColor="@color/white"
         android:background="@color/white"
-        app:itemPaddingTop="10dp"
         app:itemIconSize="28dp"
-        app:itemPaddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

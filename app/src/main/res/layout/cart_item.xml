@@ -73,7 +73,7 @@
                 android:id="@+id/imagePlus"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@drawable/green_btn"
+                android:background="@drawable/circular_btn"
                 android:gravity="center"
                 android:text="+"
                 android:textColor="@color/white"
