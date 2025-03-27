@@ -35,18 +35,25 @@ class FavoriteFragment : Fragment() {
             viewmodel.favoriteProducts.collectLatest {
                 when (it) {
                     is Resource.Loading -> {
-
+                        binding.noFavoritesTV.visibility = View.GONE
+                        binding.favoriteProgress.visibility = View.VISIBLE
                     }
 
                     is Resource.Success -> {
-                        favoriteAdapter.differ.submitList(it.data)
-
+                        if (it.data!!.isEmpty()){
+                            binding.favoriteProgress.visibility = View.GONE
+                            binding.noFavoritesTV.visibility = View.VISIBLE
+                        }else{
+                            binding.emptyFavorite.visibility = View.GONE
+                            binding.noFavoritesTV.visibility = View.VISIBLE
+                            favoriteAdapter.differ.submitList(it.data)
+                        }
                     }
 
                     is Resource.Error -> {
-
+                        binding.noFavoritesTV.visibility = View.VISIBLE
+                        binding.favoriteProgress.visibility = View.GONE
                     }
-
                     else -> Unit
                 }
             }
