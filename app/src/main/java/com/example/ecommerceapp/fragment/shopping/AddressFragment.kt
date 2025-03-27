@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 class AddressFragment: Fragment() {
     private lateinit var binding: FragmentAddressBinding
     val viewModel by viewModels<AddressViewModel>()
-    val args by navArgs<AddressFragmentArgs>()
+    private val args by navArgs<AddressFragmentArgs>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +31,12 @@ class AddressFragment: Fragment() {
             viewModel.addNewAddress.collectLatest {
                 when(it){
                     is Resource.Loading ->{
+                        binding.constraintLoading.visibility = View.VISIBLE
                         binding.addressProgressBar.visibility = View.VISIBLE
                     }
                     is Resource.Success ->{
-                        binding.addressProgressBar.visibility = View.INVISIBLE
+                        binding.constraintLoading.visibility = View.GONE
+                        binding.addressProgressBar.visibility = View.GONE
                         findNavController().navigateUp()
 
                     }
@@ -68,17 +70,17 @@ class AddressFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val address = args.address
-        if (address == null){
+        val userAddress = args.address
+        if (userAddress == null){
             binding.deleteAddressBtn.visibility = View.GONE
         }else{
             binding.apply {
-                addressTitleET.setText(address.addressTitle)
-                fullNameET.setText(address.fullName)
-                stateEt.setText(address.state)
-                phoneET.setText(address.phone)
-                cityET.setText(address.city)
-                streetET.setText(address.street)
+                addressTitleET.setText(userAddress.addressTitle)
+                fullNameET.setText(userAddress.fullName)
+                stateEt.setText(userAddress.state)
+                phoneET.setText(userAddress.phone)
+                cityET.setText(userAddress.city)
+                streetET.setText(userAddress.street)
             }
         }
 

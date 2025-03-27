@@ -99,13 +99,13 @@
 
         <ImageView
             android:id="@+id/imageAddAddress"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             app:layout_constraintEnd_toEndOf="@id/rightGuideline"
             app:layout_constraintTop_toTopOf="@id/tvShoppingAddress"
             app:layout_constraintBottom_toBottomOf="@id/tvShoppingAddress"
             android:src="@drawable/ic_add"
-            app:tint="#151A75"
+            app:tint="@color/green2"
             />
 
         <FrameLayout
@@ -130,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="@color/my_blue"
+                android:indeterminateTint="@color/green2"
                 android:visibility="gone"/>
 
         </FrameLayout>

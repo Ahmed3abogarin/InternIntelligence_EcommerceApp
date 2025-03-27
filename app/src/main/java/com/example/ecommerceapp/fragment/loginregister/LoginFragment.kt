@@ -18,7 +18,6 @@ import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.viewmodel.LoginViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint

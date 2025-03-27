@@ -1,6 +1,5 @@
 package com.example.ecommerceapp.adapter
 
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -9,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.data.Address
 import com.example.ecommerceapp.databinding.AddressRvItemBinding
-import com.example.ecommerceapp.databinding.FragmentBillingBinding
-import com.example.ecommerceapp.viewmodel.AddressViewModel
+import androidx.core.graphics.drawable.toDrawable
 
 class AddressAdapter: RecyclerView.Adapter<AddressAdapter.AddressViewHolder>(){
 
@@ -20,9 +18,11 @@ class AddressAdapter: RecyclerView.Adapter<AddressAdapter.AddressViewHolder>(){
             binding.apply {
                 buttonAddress.text = address.addressTitle
                 if (isSelected){
-                    buttonAddress.background = ColorDrawable(itemView.context.resources.getColor(R.color.my_blue))
+                    buttonAddress.background =
+                        itemView.context.resources.getColor(R.color.green2).toDrawable()
                 }else{
-                    buttonAddress.background =ColorDrawable(itemView.context.resources.getColor(R.color.my_gray))
+                    buttonAddress.background =
+                        itemView.context.resources.getColor(R.color.my_gray).toDrawable()
                 }
 
             }
@@ -51,7 +51,7 @@ class AddressAdapter: RecyclerView.Adapter<AddressAdapter.AddressViewHolder>(){
         return differ.currentList.size
     }
 
-    var selectedAddress = -1
+    private var selectedAddress = -1
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         val address = differ.currentList[position]

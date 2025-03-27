@@ -136,6 +136,7 @@ class CartFragment : Fragment() {
     private fun showOthersViews() {
         binding.apply {
             cartRecycler.visibility = View.VISIBLE
+            checkOutBtn.visibility = View.VISIBLE
         }
     }
 

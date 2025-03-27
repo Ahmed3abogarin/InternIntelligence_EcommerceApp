@@ -28,6 +28,7 @@ class RegisterFragment: Fragment() {
     private val viewModel by viewModels<RegisterViewModel>()
 
 
+    // #056B59
 
     override fun onCreateView(
         inflater: LayoutInflater,

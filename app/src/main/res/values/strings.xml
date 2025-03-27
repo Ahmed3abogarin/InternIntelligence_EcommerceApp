@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">EcommerceApp</string>
+    <string name="app_name">EliExpress</string>
     <string name="viewpageritem">viewPagerItem</string>
     <string name="test">SEgsdghsdghsd</string>
-    <string name="gsdhgsdh">gsdhgsdh</string>
+    <string name="anything">anything</string>
+    <string name="intro_paragraph">Enjoy seamless shopping—explore top deals, save favorites, and get items delivered to your doorstep</string>
 </resources>
