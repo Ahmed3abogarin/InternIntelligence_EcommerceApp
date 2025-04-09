@@ -2,6 +2,7 @@ package com.example.ecommerceapp.di
 
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import com.example.ecommerceapp.firebase.FirebaseCommon
 import com.example.ecommerceapp.util.Constants.INTRODUCTIONSP
 import com.google.firebase.Firebase
@@ -31,7 +32,7 @@ object AppModule {
     @Provides
     fun provideIntroductionSP(
         application: Application
-    ) = application.getSharedPreferences(INTRODUCTIONSP, MODE_PRIVATE)
+    ): SharedPreferences = application.getSharedPreferences(INTRODUCTIONSP, MODE_PRIVATE)
 
     @Provides
     @Singleton

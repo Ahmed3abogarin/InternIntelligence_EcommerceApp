@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:fontFamily="@font/abeezee"
-            android:text="Dont have account?" />
+            android:text="Don't have account?" />
 
         <TextView
             android:id="@+id/dontHaveTV"

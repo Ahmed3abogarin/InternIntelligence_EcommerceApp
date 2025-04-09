@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.util
 
 sealed class RegisterValidation {
-    object Success : RegisterValidation()
+    data object Success : RegisterValidation()
     data class Failed(val message:String):RegisterValidation()
 }
 data class RegisterFieldsState(

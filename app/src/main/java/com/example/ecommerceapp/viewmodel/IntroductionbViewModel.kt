@@ -11,12 +11,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.content.edit
 
 
 @HiltViewModel
 class IntroductionViewModel @Inject constructor(
-    private val sharedReference:SharedPreferences,
-    private val firebaseAuth: FirebaseAuth
+    private val sharedReference: SharedPreferences,
+    firebaseAuth: FirebaseAuth,
 ): ViewModel() {
     private val _navigation = MutableStateFlow(0)
 
@@ -34,21 +35,21 @@ class IntroductionViewModel @Inject constructor(
         val user = firebaseAuth.currentUser
 
         if (user != null){
+            // to directly navigate to main screens if the user has already sign in
             viewModelScope.launch {
                 _navigation.emit(SHOPPING_ACTIVITY)
             }
-
         }else if (isButtonCLicked){
+            // to skip the intro even if the user is not sign in before
             viewModelScope.launch {
                 _navigation.emit(ACCOUNT_OPTIONS_FRAGMENT)
             }
-
         }else{
             Unit
         }
     }
 
     fun startButtonCLicked(){
-        sharedReference.edit().putBoolean(INTRODUCTION_KEY, true).apply()
+        sharedReference.edit { putBoolean(INTRODUCTION_KEY, true) }
     }
 }

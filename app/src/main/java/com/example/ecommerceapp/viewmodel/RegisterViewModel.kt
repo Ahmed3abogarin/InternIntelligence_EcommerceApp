@@ -10,7 +10,6 @@ import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.util.validateEmail
 import com.example.ecommerceapp.util.validatePassword
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -47,7 +46,7 @@ class RegisterViewModel @Inject constructor(
                      it.user?.let {
                          saveUserInfo(it.uid,user)
                          Log.v("FUCK","The user is created")
-                         //_register.value = Resource.Success(it)
+                         _register.value = Resource.Success(user)
                      }
                  }.addOnFailureListener {
                      _register.value = Resource.Error(it.message.toString())
@@ -66,7 +65,7 @@ class RegisterViewModel @Inject constructor(
     fun saveUserInfo(userUid:String, user: User){
         db.collection(USER_COLLECTION)
             .document(userUid)
-            .set(user) // to save doucmnt
+            .set(user) // to save document
             .addOnSuccessListener {
                 _register.value = Resource.Success(user)
             }.addOnFailureListener {

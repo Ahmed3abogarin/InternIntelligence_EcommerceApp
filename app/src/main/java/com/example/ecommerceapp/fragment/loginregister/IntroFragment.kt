@@ -46,9 +46,7 @@ class IntroFragment: Fragment(R.layout.fragment_intro) {
                             startActivity(intent)
 
                         }
-
                     }
-
                     ACCOUNT_OPTIONS_FRAGMENT -> {
                         findNavController().navigate(it)
 

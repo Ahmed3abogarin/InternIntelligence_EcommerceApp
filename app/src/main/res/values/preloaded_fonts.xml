@@ -2,7 +2,6 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/abeezee</item>
-        <item>@font/adlam_display</item>
         <item>@font/league_spartan_bold</item>
     </array>
 </resources>
