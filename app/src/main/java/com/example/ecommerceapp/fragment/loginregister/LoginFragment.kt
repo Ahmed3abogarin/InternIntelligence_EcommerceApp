@@ -49,6 +49,11 @@ class LoginFragment: Fragment() {
             viewModel.resetPassword.collect{
                 when(it){
                     is Resource.Loading -> {
+                        binding.apply {
+                            loadingLayout.visibility = View.VISIBLE
+                            loginProgress.visibility = View.VISIBLE
+                            LoginBtn.visibility = View.INVISIBLE
+                        }
                     }
                     is Resource.Success ->{
                         Snackbar.make(requireView(),"Reset password link was send to your email",Snackbar.LENGTH_LONG).show()
@@ -78,8 +83,11 @@ class LoginFragment: Fragment() {
             viewModel.login.collect{
                 when(it){
                     is Resource.Loading -> {
-                        binding.LoginBtn.isEnabled = false
-
+                        binding.apply {
+                            loadingLayout.visibility = View.VISIBLE
+                            loginProgress.visibility = View.VISIBLE
+                            LoginBtn.visibility = View.INVISIBLE
+                        }
                     }
                     is Resource.Success ->{
                         binding.LoginBtn.isEnabled = true

@@ -1,11 +1,11 @@
 package com.example.ecommerceapp.fragment.shopping
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ecommerceapp.remote.ApiInterface
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.adapter.AddressAdapter
 import com.example.ecommerceapp.adapter.BillingProductAdapter
@@ -21,13 +22,21 @@ import com.example.ecommerceapp.data.CartProduct
 import com.example.ecommerceapp.data.order.Order
 import com.example.ecommerceapp.data.order.OrderStatus
 import com.example.ecommerceapp.databinding.FragmentBillingBinding
+import com.example.ecommerceapp.util.Constants.PB_KEY
 import com.example.ecommerceapp.util.HorizontalItemDecoration
 import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.viewmodel.BillingViewModel
 import com.example.ecommerceapp.viewmodel.OrderedViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BillingFragment : Fragment() {
@@ -37,6 +46,9 @@ class BillingFragment : Fragment() {
 
     private val billingViewModel by viewModels<BillingViewModel>()
 
+    @Inject
+    lateinit var payApi: ApiInterface
+
     // receive the products the total price
     private val args by navArgs<BillingFragmentArgs>()
     private var products = emptyList<CartProduct>()
@@ -45,20 +57,133 @@ class BillingFragment : Fragment() {
     private var selectedAddress: Address? = null
     private val orderViewModel by viewModels<OrderedViewModel>()
 
+
+    // payment
+    private lateinit var paymentSheet: PaymentSheet
+    private lateinit var customerId: String
+    private lateinit var ephKey: String
+    private lateinit var clientSecret: String
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PaymentConfiguration.init(requireActivity(), PB_KEY)
+        getCustomerId()
+        paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
+
 
         //-------------------- Receive the products list and the total price--------------
         products = args.products.toList()
         totalPrice = args.totalPrice
 
+
+    }
+
+    private fun getCustomerId() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val res = payApi.getCustomer()
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful && res.body() != null) {
+                    customerId = res.body()!!.id
+                    getEphKey(customerId)
+                    Log.v("PAYMENT","CustomerId is $customerId")
+
+                }
+            }
+        }
+    }
+
+    private fun getEphKey(id: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val res = payApi.getEphKey(id)
+            withContext(Dispatchers.Main) {
+                if (res.isSuccessful && res.body() != null) {
+
+                    ephKey = res.body()!!.secret
+                    getPaymentIntent(id)
+
+                    Log.v("PAYMENT","EphKey is success")
+
+
+                }
+
+            }
+
+        }
+    }
+
+    private fun paymentFlow() {
+        Log.v("PAYMENT","Payment flow is called")
+        paymentSheet.presentWithPaymentIntent(
+            clientSecret,
+            PaymentSheet.Configuration(
+                "Ahmed Ecommerce app",
+                PaymentSheet.CustomerConfiguration(
+                   id =  customerId, ephemeralKeySecret =  ephKey
+                )
+            )
+        )
+    }
+
+    private fun getPaymentIntent(id: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val res = payApi.getPaymentIntents(customer = id, amount = totalPrice )
+                withContext(Dispatchers.Main) {
+                    if (res.isSuccessful && res.body() != null) {
+                        clientSecret = res.body()!!.client_secret
+                        Log.v("PAYMENT",clientSecret)
+                        
+                        binding.buttonPlaceOrder.isEnabled = true
+
+                        Toast.makeText(context, "Proceed for payment", Toast.LENGTH_SHORT).show()
+
+                    } else {
+                        Log.v("PAYMENT","error is from client")
+                    }
+                }
+
+            }catch (e: Exception){
+                Log.v("PAYMENT",e.message.toString())
+            }
+
+
+
+        }
+    }
+
+    fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+        when (paymentSheetResult) {
+            is PaymentSheetResult.Completed -> {
+                val order = Order(
+                    OrderStatus.Ordered.status,
+                    totalPrice,
+                    products,
+                    selectedAddress!!
+                )
+                orderViewModel.placeOrder(order)
+                Toast.makeText(requireContext(), "Payment Done successfully", Toast.LENGTH_SHORT).show()
+            }
+
+            is PaymentSheetResult.Canceled -> {
+                Log.v("PAYMENT","payment canleded")
+            }
+
+            is PaymentSheetResult.Failed -> {
+                Log.v("PAYMENT",paymentSheetResult.error.message.toString())
+
+
+
+            }
+        }
     }
 
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
 
         binding = FragmentBillingBinding.inflate(inflater, container, false)
@@ -163,31 +288,31 @@ class BillingFragment : Fragment() {
                     .show()
                 return@setOnClickListener
             }
-            showOrderConfirmationDialog()
+            paymentFlow()
         }
     }
 
-    private fun showOrderConfirmationDialog() {
-        val alertDialog = AlertDialog.Builder(requireContext()).apply {
-            setTitle("Order items")
-            setMessage("Do you want to order your cart items?")
-            setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            setPositiveButton("Yes") { dialog, _ ->
-                val order = Order(
-                    OrderStatus.Ordered.status,
-                    totalPrice,
-                    products,
-                    selectedAddress!!
-                )
-                orderViewModel.placeOrder(order)
-                dialog.dismiss()
-            }
-        }
-        alertDialog.create()
-        alertDialog.show()
-    }
+//    private fun showOrderConfirmationDialog() {
+//        val alertDialog = AlertDialog.Builder(requireContext()).apply {
+//            setTitle("Order items")
+//            setMessage("Do you want to order your cart items?")
+//            setNegativeButton("Cancel") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            setPositiveButton("Yes") { dialog, _ ->
+//                val order = Order(
+//                    OrderStatus.Ordered.status,
+//                    totalPrice,
+//                    products,
+//                    selectedAddress!!
+//                )
+//                orderViewModel.placeOrder(order)
+//                dialog.dismiss()
+//            }
+//        }
+//        alertDialog.create()
+//        alertDialog.show()
+//    }
 
     private fun setUpBillingProductRV() {
         binding.rvProducts.apply {

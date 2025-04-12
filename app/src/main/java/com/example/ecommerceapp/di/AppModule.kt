@@ -3,6 +3,7 @@ package com.example.ecommerceapp.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.ecommerceapp.remote.ApiInterface
 import com.example.ecommerceapp.firebase.FirebaseCommon
 import com.example.ecommerceapp.util.Constants.INTRODUCTIONSP
 import com.google.firebase.Firebase
@@ -14,6 +15,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 
@@ -31,17 +34,26 @@ object AppModule {
 
     @Provides
     fun provideIntroductionSP(
-        application: Application
+        application: Application,
     ): SharedPreferences = application.getSharedPreferences(INTRODUCTIONSP, MODE_PRIVATE)
 
     @Provides
     @Singleton
     fun provideFirebaseCommon(
         auth: FirebaseAuth,
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
     ) = FirebaseCommon(firestore, auth)
 
     @Provides
     @Singleton
     fun provideStorage() = FirebaseStorage.getInstance().reference
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): ApiInterface {
+        return Retrofit.Builder()
+            .baseUrl("https://api.stripe.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(ApiInterface::class.java)
+    }
 }

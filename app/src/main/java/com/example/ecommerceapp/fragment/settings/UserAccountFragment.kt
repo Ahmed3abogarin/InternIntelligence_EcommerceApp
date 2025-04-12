@@ -65,7 +65,6 @@ class UserAccountFragment : Fragment() {
                     }
 
                     is Resource.Success -> {
-                        hideUserLoading()
                         showUserInformation(it.data!!)
 
                     }
@@ -136,28 +135,11 @@ class UserAccountFragment : Fragment() {
         }
     }
 
-    private fun hideUserLoading() {
-        binding.apply {
-            progressbarAccount.visibility = View.GONE
-            imageUser.visibility = View.VISIBLE
-            imageEdit.visibility = View.VISIBLE
-            edFirstName.visibility = View.VISIBLE
-            edLastName.visibility = View.VISIBLE
-            edEmail.visibility = View.VISIBLE
-            tvUpdatePassword.visibility = View.VISIBLE
-            buttonSave.visibility = View.VISIBLE
-        }
-    }
 
     private fun showUserLoading() {
         binding.apply {
-            progressbarAccount.visibility = View.VISIBLE
-            imageUser.visibility = View.INVISIBLE
-            imageEdit.visibility = View.INVISIBLE
-            edFirstName.visibility = View.INVISIBLE
-            edLastName.visibility = View.INVISIBLE
-            edEmail.visibility = View.INVISIBLE
-            tvUpdatePassword.visibility = View.INVISIBLE
+            loadingLayout.visibility = View.VISIBLE
+            loginProgress.visibility = View.VISIBLE
             buttonSave.visibility = View.INVISIBLE
         }
     }

@@ -36,6 +36,7 @@ class FavoriteFragment : Fragment() {
                 when (it) {
                     is Resource.Loading -> {
                         binding.noFavoritesTV.visibility = View.GONE
+                        binding.emptyFavorite.visibility = View.GONE
                         binding.favoriteProgress.visibility = View.VISIBLE
                     }
 
@@ -43,15 +44,18 @@ class FavoriteFragment : Fragment() {
                         if (it.data!!.isEmpty()){
                             binding.favoriteProgress.visibility = View.GONE
                             binding.noFavoritesTV.visibility = View.VISIBLE
+                            binding.emptyFavorite.visibility = View.VISIBLE
                         }else{
                             binding.emptyFavorite.visibility = View.GONE
-                            binding.noFavoritesTV.visibility = View.VISIBLE
+                            binding.favoriteProgress.visibility = View.GONE
+                            binding.noFavoritesTV.visibility = View.GONE
                             favoriteAdapter.differ.submitList(it.data)
                         }
                     }
 
                     is Resource.Error -> {
                         binding.noFavoritesTV.visibility = View.VISIBLE
+                        binding.emptyFavorite.visibility = View.VISIBLE
                         binding.favoriteProgress.visibility = View.GONE
                     }
                     else -> Unit

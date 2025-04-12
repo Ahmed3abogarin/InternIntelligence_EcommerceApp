@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerceapp.data.Cats
@@ -25,6 +26,9 @@ class ProductsViewModel @Inject constructor(
     private val _newProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
     val newProducts = _newProducts.asStateFlow()
 
+    private val _bestProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
+    val bestProducts = _bestProducts.asStateFlow()
+
     private val _bannerImages = MutableStateFlow<Resource<List<SliderItem>>>(Resource.Unspecified())
     val bannerImages = _bannerImages.asStateFlow()
 
@@ -42,6 +46,28 @@ class ProductsViewModel @Inject constructor(
         fetchNewProducts()
         fetchBannersImages()
         fetchCatsImage()
+        fetchBestSellerProducts()
+    }
+
+    private fun fetchBestSellerProducts() {
+        viewModelScope.launch {
+            _bestProducts.emit(Resource.Loading())
+        }
+        firestore.collection("products").whereEqualTo("category", "bestSeller")
+            .whereEqualTo("offerPercentage", null).get()
+            .addOnSuccessListener {
+                val products = it.toObjects(Product::class.java)
+                viewModelScope.launch {
+                    _bestProducts.emit(Resource.Success(products))
+                }
+
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    _bestProducts.emit(Resource.Error(it.message.toString()))
+                }
+            }
+
+
     }
 
 
@@ -91,6 +117,7 @@ class ProductsViewModel @Inject constructor(
         firestore.collection("banners").get()
             .addOnSuccessListener {
                 val banners = it.toObjects(SliderItem::class.java)
+                Log.v("TOOL",banners[0].imageUrl)
                 viewModelScope.launch {
                     _bannerImages.emit(Resource.Success(banners))
                 }

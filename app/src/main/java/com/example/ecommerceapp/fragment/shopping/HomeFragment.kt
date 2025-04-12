@@ -49,6 +49,7 @@ class HomeFragment : Fragment() {
             val b = Bundle().apply { putParcelable("product", it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
         }
+
         adapter3.onClick = {
             val b = Bundle().apply { putParcelable("product", it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
@@ -57,50 +58,28 @@ class HomeFragment : Fragment() {
 
 
         lifecycleScope.launchWhenStarted {
-            viewModel.searchedProducts.collectLatest {
+            viewModel.bannerImages.collectLatest {
                 when (it) {
                     is Resource.Loading -> {
-
+                        binding.progress1.visibility = View.VISIBLE
                     }
 
                     is Resource.Success -> {
-                        adapter3.differ.submitList(it.data)
+
+                        pagerAdapter.differ.submitList(it.data)
+                        binding.progress1.visibility = View.GONE
                     }
 
                     is Resource.Error -> {
-
+                        Log.e("TAG", it.message.toString())
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                     }
 
                     else -> Unit
                 }
-
-            }
-
-
-            lifecycleScope.launchWhenStarted {
-                viewModel.bannerImages.collectLatest {
-                    when (it) {
-                        is Resource.Loading -> {
-                            //binding.officialProgress.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-
-                            pagerAdapter.differ.submitList(it.data)
-
-                            //binding.officialProgress.visibility = View.GONE
-                        }
-
-                        is Resource.Error -> {
-                            Log.e("TAG", it.message.toString())
-                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                        }
-
-                        else -> Unit
-                    }
-                }
             }
         }
+
 
 
         lifecycleScope.launchWhenStarted {
@@ -176,6 +155,29 @@ class HomeFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.bestProducts.collectLatest {
+                when (it) {
+                    is Resource.Loading -> {
+                        binding.bestProgress.visibility = View.VISIBLE
+                    }
+
+                    is Resource.Success -> {
+                        adapter3.differ.submitList(it.data)
+                        binding.bestProgress.visibility = View.GONE
+                    }
+
+                    is Resource.Error -> {
+                        binding.bestProgress.visibility = View.GONE
+                        Log.e("TAG", it.message.toString())
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
+
 
     }
 
@@ -185,6 +187,7 @@ class HomeFragment : Fragment() {
         setUpCatRV()
         setUpPopularRV()
         setUpNewRV()
+        setUpBestSellersRV()
         setUpViewPager()
 
         binding.mySearchView.setOnClickListener {
@@ -204,7 +207,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        binding.viewPager.adapter = pagerAdapter
+        binding.apply {
+
+            viewPager.adapter = pagerAdapter
+        }
+
     }
 
     private fun setUpNewRV() {
@@ -213,6 +220,17 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             newRecycler.adapter = adapter2
             newRecycler.addItemDecoration(VerticalItemDecoration())
+        }
+
+
+    }
+
+    private fun setUpBestSellersRV() {
+        binding.apply {
+            bestRecycler.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            bestRecycler.adapter = adapter3
+            bestRecycler.addItemDecoration(VerticalItemDecoration())
         }
 
 

@@ -66,7 +66,11 @@ class RegisterFragment: Fragment() {
             viewModel.register.collect{
                 when(it){
                     is Resource.Loading -> {
-                        binding.RegisterNewBtn.isEnabled = false
+                        binding.apply {
+                            loadingLayout.visibility = View.VISIBLE
+                            registerProgress.visibility = View.VISIBLE
+                            RegisterNewBtn.visibility = View.INVISIBLE
+                        }
 
                     }
                     is Resource.Success -> {

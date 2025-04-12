@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.ecommerceapp.MainActivity
+import com.example.ecommerceapp.activity.MainActivity
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.databinding.FragmentProfileBinding
 import com.example.ecommerceapp.util.Resource
@@ -61,7 +61,7 @@ class ProfileFragment: Fragment() {
 
         binding.logout.setOnClickListener{
             viewModel.logout()
-            val intent = Intent(requireActivity(),MainActivity::class.java)
+            val intent = Intent(requireActivity(), MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             //requireActivity().finish()

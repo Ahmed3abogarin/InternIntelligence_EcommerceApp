@@ -25,9 +25,9 @@ class OrderedViewModel @Inject constructor(
 
         //----------------firestore -----------
         firestore.runBatch {
-            //TODO: Add the order into user-orders collection
-            //TODO: Add the order into orders collection
-            //TODO: Delete the products from user-cart collection
+            //1 : Add the order into user-orders collection
+            //2 : Add the order into orders collection
+            //3 : Delete the products from user-cart collection
 
             // 1
             firestore.collection("Shop_users")
