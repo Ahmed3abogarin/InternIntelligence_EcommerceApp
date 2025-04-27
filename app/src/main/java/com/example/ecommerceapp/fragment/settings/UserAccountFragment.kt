@@ -65,11 +65,13 @@ class UserAccountFragment : Fragment() {
                     }
 
                     is Resource.Success -> {
+                        hideUserLoading()
                         showUserInformation(it.data!!)
 
                     }
 
                     is Resource.Error -> {
+                        hideUserLoading()
                         Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT)
                             .show()
 
@@ -84,10 +86,12 @@ class UserAccountFragment : Fragment() {
             viewModel.updateInfo.collectLatest {
                 when (it) {
                     is Resource.Loading -> {
+                        showUserLoading()
                         binding.buttonSave.isEnabled = false
                     }
 
                     is Resource.Success -> {
+                        hideUserLoading()
                         binding.buttonSave.isEnabled = true
                         findNavController().navigateUp()
 
@@ -141,6 +145,14 @@ class UserAccountFragment : Fragment() {
             loadingLayout.visibility = View.VISIBLE
             loginProgress.visibility = View.VISIBLE
             buttonSave.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun hideUserLoading() {
+        binding.apply {
+            loadingLayout.visibility = View.GONE
+            loginProgress.visibility = View.GONE
+            buttonSave.visibility = View.VISIBLE
         }
     }
 }

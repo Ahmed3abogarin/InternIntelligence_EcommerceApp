@@ -107,11 +107,11 @@ class UserAccountViewModel @Inject constructor(
         }
     }
 
-    private fun saveUserInformation(user: User, shouldRetriveOldImage: Boolean) {
+    private fun saveUserInformation(user: User, shouldRetrieveOldImage: Boolean) {
         firestore.runTransaction{ transaction ->
             val documentRef = firestore.collection("Shop_users").document(auth.uid!!)
 
-            if (shouldRetriveOldImage){
+            if (shouldRetrieveOldImage){
                 val currentUser = transaction.get(documentRef).toObject(User::class.java)
                 val updatedUser = user.copy(imagePath = currentUser?.imagePath ?:"")
                 transaction.set(documentRef,updatedUser)

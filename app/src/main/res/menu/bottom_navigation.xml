@@ -4,7 +4,7 @@
         android:icon="@drawable/home_selector"
         android:id="@+id/homeFragment"/>
 
-    <item android:title="Search"
+    <item android:title="Favorites"
         android:icon="@drawable/favorite_selector"
         android:id="@+id/favoriteFragment"/>
 
