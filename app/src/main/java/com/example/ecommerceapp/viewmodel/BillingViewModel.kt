@@ -1,22 +1,18 @@
 package com.example.ecommerceapp.viewmodel
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerceapp.PaymentManager
 import com.example.ecommerceapp.data.Address
-import com.example.ecommerceapp.remote.ApiInterface
 import com.example.ecommerceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 @HiltViewModel
@@ -50,10 +46,11 @@ class BillingViewModel @Inject constructor(
             }
     }
 
-    fun preparePaymentFlow(totalPrice: Float) {
+    fun preparePaymentFlow(price: Float) {
+        val totalPrice = (price * 100).roundToInt()
         viewModelScope.launch {
             _paymentDetails.emit(Resource.Loading())
-            val result = paymentManager.preparePayment(100f)
+            val result = paymentManager.preparePayment(totalPrice)
             _paymentDetails.emit(
                 result.fold(
                     onSuccess = { Resource.Success(it) },

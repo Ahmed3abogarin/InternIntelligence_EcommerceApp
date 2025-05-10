@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ecommerceapp.remote.ApiInterface
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.adapter.AddressAdapter
 import com.example.ecommerceapp.adapter.BillingProductAdapter
@@ -32,11 +31,8 @@ import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BillingFragment : Fragment() {
@@ -207,11 +203,12 @@ class BillingFragment : Fragment() {
             billingViewModel.paymentDetails.collectLatest { res ->
                 when (res) {
                     is Resource.Loading -> {
-                        // Show loading
+                        binding.buttonPlaceOrder.isEnabled = false
+                        binding.buttonPlaceOrder.startAnimation()
                     }
+
                     is Resource.Success -> {
                         res.data?.let { (customerId, ephKey, clientSecret) ->
-                            Log.d("StripeData", "customerId=$customerId, ephemeralKey=$ephKey, clientSecret=$clientSecret")
                             paymentSheet.presentWithPaymentIntent(
                                 clientSecret,
                                 PaymentSheet.Configuration(
@@ -222,6 +219,8 @@ class BillingFragment : Fragment() {
                         } ?: run {
                             Toast.makeText(requireContext(), "Payment data is missing", Toast.LENGTH_SHORT).show()
                         }
+                        binding.buttonPlaceOrder.revertAnimation()
+                        binding.buttonPlaceOrder.isEnabled = true
                     }
                     is Resource.Error -> {
                         Log.d("StripeDate","error is : ${res.message}")

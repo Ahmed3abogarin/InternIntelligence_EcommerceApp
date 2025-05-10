@@ -29,7 +29,7 @@ interface ApiInterface {
     @POST("v1/payment_intents")
     suspend fun getPaymentIntents(
         @Query("customer") customer: String,
-        @Query("amount") amount: Float = 10000f,
+        @Query("amount") amount: Int,
         @Query("currency") currency: String = "eur",
         @Query("automatic_payment_methods[enabled]") automatePay: Boolean = true,
     ): Response<PaymentIntentModel>

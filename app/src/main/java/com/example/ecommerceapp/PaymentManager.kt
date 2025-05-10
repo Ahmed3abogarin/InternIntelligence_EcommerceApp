@@ -7,7 +7,7 @@ import javax.inject.Inject
 class PaymentManager @Inject constructor(
     private val api: ApiInterface
 ) {
-    suspend fun preparePayment(amount: Float): Result<Triple<String, String, String>> {
+    suspend fun preparePayment(amount: Int): Result<Triple<String, String, String>> {
         return try {
             val customerRes = api.getCustomer()
             val customerId = customerRes.body()?.id ?: return Result.failure(Exception("Customer creation failed"))
@@ -15,7 +15,7 @@ class PaymentManager @Inject constructor(
             val ephKeyRes = api.getEphKey(customerId)
             val ephKey = ephKeyRes.body()?.secret ?: return Result.failure(Exception("Ephemeral key fetch failed"))
 
-            val paymentIntentRes = api.getPaymentIntents(customerId, 100f)
+            val paymentIntentRes = api.getPaymentIntents(customerId, amount)
             val clientSecret = paymentIntentRes.body()?.client_secret ?: return Result.failure(Exception("PaymentIntent failed"))
 
             Log.v("STRIPE","cId: $customerId, ephKey: $ephKey, clientSecret: $clientSecret")
