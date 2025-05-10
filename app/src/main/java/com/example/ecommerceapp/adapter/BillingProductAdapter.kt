@@ -22,7 +22,7 @@ class BillingProductAdapter: RecyclerView.Adapter<BillingProductAdapter.BillingV
                 tvProductCartName.text = cartProduct.product.name
                 tvBillingProductQuantity.text = cartProduct.quantity.toString()
 
-                val priceAfterPercentage = cartProduct.product.price.getProductPrice(cartProduct.product.price)
+                val priceAfterPercentage = cartProduct.product.offerPercentage.getProductPrice(cartProduct.product.price)
                 tvProductCartPrice.text = "$ ${String.format("%.2f", priceAfterPercentage)}"
 
                 imageCartProductColor.setImageDrawable(ColorDrawable(cartProduct.selectedColors?: Color.TRANSPARENT))

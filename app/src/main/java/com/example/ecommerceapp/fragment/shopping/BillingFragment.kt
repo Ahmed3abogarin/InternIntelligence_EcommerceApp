@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class BillingFragment : Fragment() {
@@ -129,7 +130,7 @@ class BillingFragment : Fragment() {
     private fun getPaymentIntent(id: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val res = payApi.getPaymentIntents(customer = id, amount = totalPrice )
+                val res = payApi.getPaymentIntents(customer = customerId, amount = (totalPrice * 100).roundToInt() )
                 withContext(Dispatchers.Main) {
                     if (res.isSuccessful && res.body() != null) {
                         clientSecret = res.body()!!.client_secret
@@ -140,7 +141,7 @@ class BillingFragment : Fragment() {
                         Toast.makeText(context, "Proceed for payment", Toast.LENGTH_SHORT).show()
 
                     } else {
-                        Log.v("PAYMENT","error is from client")
+                        Log.v("PAYMENT",res.message())
                     }
                 }
 
