@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ecommerceapp.remote.ApiInterface
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.adapter.AddressAdapter
 import com.example.ecommerceapp.adapter.BillingProductAdapter
@@ -32,12 +31,8 @@ import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class BillingFragment : Fragment() {
@@ -47,8 +42,6 @@ class BillingFragment : Fragment() {
 
     private val billingViewModel by viewModels<BillingViewModel>()
 
-    @Inject
-    lateinit var payApi: ApiInterface
 
     // receive the products the total price
     private val args by navArgs<BillingFragmentArgs>()
@@ -61,16 +54,13 @@ class BillingFragment : Fragment() {
 
     // payment
     private lateinit var paymentSheet: PaymentSheet
-    private lateinit var customerId: String
-    private lateinit var ephKey: String
-    private lateinit var clientSecret: String
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         PaymentConfiguration.init(requireActivity(), PB_KEY)
-        getCustomerId()
         paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
 
 
@@ -81,78 +71,9 @@ class BillingFragment : Fragment() {
 
     }
 
-    private fun getCustomerId() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val res = payApi.getCustomer()
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful && res.body() != null) {
-                    customerId = res.body()!!.id
-                    getEphKey(customerId)
-                    Log.v("PAYMENT","CustomerId is $customerId")
-
-                }
-            }
-        }
-    }
-
-    private fun getEphKey(id: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val res = payApi.getEphKey(id)
-            withContext(Dispatchers.Main) {
-                if (res.isSuccessful && res.body() != null) {
-
-                    ephKey = res.body()!!.secret
-                    getPaymentIntent(id)
-
-                    Log.v("PAYMENT","EphKey is success")
-
-
-                }
-
-            }
-
-        }
-    }
-
-    private fun paymentFlow() {
-        Log.v("PAYMENT","Payment flow is called")
-        paymentSheet.presentWithPaymentIntent(
-            clientSecret,
-            PaymentSheet.Configuration(
-                "Ahmed Ecommerce app",
-                PaymentSheet.CustomerConfiguration(
-                   id =  customerId, ephemeralKeySecret =  ephKey
-                )
-            )
-        )
-    }
-
-    private fun getPaymentIntent(id: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val res = payApi.getPaymentIntents(customer = customerId, amount = (totalPrice * 100).roundToInt() )
-                withContext(Dispatchers.Main) {
-                    if (res.isSuccessful && res.body() != null) {
-                        clientSecret = res.body()!!.client_secret
-                        Log.v("PAYMENT",clientSecret)
-                        
-                        binding.buttonPlaceOrder.isEnabled = true
-
-                        Toast.makeText(context, "Proceed for payment", Toast.LENGTH_SHORT).show()
-
-                    } else {
-                        Log.v("PAYMENT",res.message())
-                    }
-                }
-
-            }catch (e: Exception){
-                Log.v("PAYMENT",e.message.toString())
-            }
 
 
 
-        }
-    }
 
     fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         when (paymentSheetResult) {
@@ -172,7 +93,9 @@ class BillingFragment : Fragment() {
             }
 
             is PaymentSheetResult.Failed -> {
-                Log.v("PAYMENT",paymentSheetResult.error.message.toString())
+                val errorMessage = paymentSheetResult.error.message ?: "Unknown payment error"
+                Log.e("PAYMENT", errorMessage)
+                Toast.makeText(requireContext(), "Payment failed: $errorMessage", Toast.LENGTH_LONG).show()
 
 
 
@@ -275,6 +198,42 @@ class BillingFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            billingViewModel.paymentDetails.collectLatest { res ->
+                when (res) {
+                    is Resource.Loading -> {
+                        binding.buttonPlaceOrder.isEnabled = false
+                        binding.buttonPlaceOrder.startAnimation()
+                    }
+
+                    is Resource.Success -> {
+                        res.data?.let { (customerId, ephKey, clientSecret) ->
+                            paymentSheet.presentWithPaymentIntent(
+                                clientSecret,
+                                PaymentSheet.Configuration(
+                                    "Ahmed Ecommerce App",
+                                    PaymentSheet.CustomerConfiguration(customerId, ephKey)
+                                )
+                            )
+                        } ?: run {
+                            Toast.makeText(requireContext(), "Payment data is missing", Toast.LENGTH_SHORT).show()
+                        }
+                        binding.buttonPlaceOrder.revertAnimation()
+                        binding.buttonPlaceOrder.isEnabled = true
+                    }
+                    is Resource.Error -> {
+                        Log.d("StripeDate","error is : ${res.message}")
+                        Toast.makeText(requireContext(), res.message ?: "Payment failed", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> Unit
+                }
+            }
+        }
+
+
+
+
         billingProductAdapter.differ.submitList(products)
 
         binding.tvTotalPrice.text = "$ " + String.format("%.2f", totalPrice)
@@ -283,13 +242,13 @@ class BillingFragment : Fragment() {
         addressAdapter.onClick = {
             selectedAddress = it
         }
+
         binding.buttonPlaceOrder.setOnClickListener {
             if (selectedAddress == null) {
-                Toast.makeText(requireContext(), "Please choose an address", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
+                Toast.makeText(requireContext(), "Please select address", Toast.LENGTH_SHORT).show()
+            } else {
+                billingViewModel.preparePaymentFlow(totalPrice)
             }
-            paymentFlow()
         }
     }
 
